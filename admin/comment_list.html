@@ -273,6 +273,26 @@
           }
         })
       })
+      //评论审核删除
+      //动态添加的元素需要注册委托事件
+      $('body').on('click', '.btn-delete', function () {
+        //获取评论id
+        var id = $(this).attr('data-id')
+        $.ajax({
+          type: 'post',
+          url: BigNew.comment_delete,
+          dataType: 'json',
+          data: {
+            id: id
+          },
+          success: function (response) {
+            console.log(response);
+            window.location.reload(); //刷新当前页面
+            if (response.code === 200)
+              alert(response.msg);
+          }
+        })
+      })
     })
   </script>
 </body>
