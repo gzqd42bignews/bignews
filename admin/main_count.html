@@ -220,12 +220,24 @@
         success: function(response) {
           console.log(response);
           const code = response.code;
+          let arrName = [];
+          let arrArticles = [];
+          response.date.forEach(function(item) {
+            arrName.push(item.name);
+          });
+          response.date.forEach(function(item) {
+            arrArticles.push(item.articles);
+          });
+          //   console.log(arrName);
+          console.log(arrName);
+          console.log(arrArticles);
+
           if (code === 200) {
-            barGraph();
+            barGraph(arrName, arrArticles);
           }
         }
       });
-      function barGraph() {
+      function barGraph(arrName, arrArticles) {
         // 基于准备好的dom，初始化echarts实例
         var myChart2 = echarts.init(document.getElementById("column_show"));
         option2 = {
@@ -241,7 +253,7 @@
             }
           },
           legend: {
-            data: ["爱生活", "趣美味", "爱旅行", "爱电影", "爱游泳"],
+            data: arrName,
             top: 30
           },
           grid: {
