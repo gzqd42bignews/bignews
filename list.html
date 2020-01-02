@@ -310,6 +310,7 @@
           </div>
       {{/each}}
     </script>
+    <!-- 搜索文章 -->
     <script>
       $(function() {
         // 获取搜索框的值，
@@ -334,10 +335,33 @@
             }
           });
         });
-        // $(".search_btn").trigger("click");
+        $(".search_btn").trigger("click");
+      });
+    </script>
 
-        const id = location.search;
-        console.log(id);
+    <!-- 文章全部分类 渲染列表的模板 -->
+    <script id="category_list" type="text/html">
+            <li class="up"></li>
+            {{each}}
+            <li><a href="./list.html?id={{$value.id}}&name={{$value.name}}" >{{$value.name}}</a></li>
+          </ul>
+      {{/each}}
+    </script>
+
+    <!-- 文章全部分类 -->
+    <script>
+      $(function() {
+        $.ajax({
+          type: "get",
+          url: "http://localhost:8080/api/v1/index/category",
+          dataType: "json",
+          success: function(response) {
+            console.log(response);
+            const data = response.data;
+            const htmlStr = template("category_list", data);
+            $(".level_two").html(htmlStr);
+          }
+        });
       });
     </script>
   </body>
