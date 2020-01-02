@@ -128,6 +128,45 @@
           $(".article_cover").attr("src", url);
         }
       });
+      //发布和存草稿步骤相同，只是其中的状态不同，所以封装为一函数调用，传入按钮代表的状态为参数即可
+      function fn(state) {
+        var fd = new FormData($("form")[0]);
+        console.log(fd);
+        //追加文章内容
+        fd.append("content", tinyMCE.activeEditor.getContent());
+        //追加文章状态
+        fd.append("state", state);
+        $.ajax({
+          type: "post",
+          url: BigNew.article_publish,
+          dataType: "json",
+          data: fd,
+          contentType: false,
+          processData: false,
+          success: function(res) {
+            if (res.code === 200) {
+              alert("添加成功");
+              $(".level02>li:eq(0)", window.parent.document)
+                .addClass("active")
+                .siblings()
+                .removeClass("active");
+              window.history.back();
+            } else {
+              alert(res.msg);
+            }
+          }
+        });
+      }
+
+      //点击发布按钮
+      $(".btn-success").click(function(e) {
+        e.preventDefault();
+        fn("已发布");
+      });
+      $(".btn-default").click(function(e) {
+        e.preventDefault();
+        fn("草稿");
+      });
     });
   </script>
 </html>
