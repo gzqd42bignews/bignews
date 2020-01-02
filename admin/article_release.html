@@ -116,6 +116,18 @@
           }
         }
       });
+
+      //预览图片文件
+      $('#inputCover').change(function(){
+        //获取到图片的路径
+        var file=this.file[0];
+        //将图片路径转化成网页地址
+        if(file){
+          const url= URL.createObjectURL(file);
+        }
+        $('.article_cover').attr('src',url)
+      })
+      
     });
   </script>
 </html>
