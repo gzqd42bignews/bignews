@@ -199,7 +199,7 @@
             </div>
             <div class="common_wrap">
                 <h3><i class="fa fa-bullseye"></i> 焦点关注</h3>
-                <ul class="content_list guanzhu_list">
+                <ul class="content_list guanzhu_list" id="guanzhu_list">
                     <li><a href="#">神奇的水滴摄影，泡泡中的世界泡泡中的世界</a></li>
                     <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
                     <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
@@ -227,6 +227,34 @@
     </div>
     <!-- 导包template -->
     <script src="./js/template-web.js"></script>
+
+    <script id='attention' type='text/html'>
+    {{each data }}
+    <li>
+        <a href="#">{{$value.intro}}</a>
+    </li>
+    {{/each}}
+
+    </script>
+    <script>
+
+        $(function () {
+            //请求服务器数据
+            $.ajax({
+                url: "http://localhost:8080/api/v1/index/attention",
+                dataType: 'json',
+                success: function (response) {
+                    // console.log(response.data)
+                    //template模板
+                    $('#guanzhu_list').html(template('attention', response))
+                }
+            })
+        })
+
+
+            //文章详细内容
+
+    </script>
 </body>
 
 </html>

@@ -227,6 +227,67 @@
     <script src="./js/template-web.js"></script>
     <!-- 引入jq文件 -->
     <script src="./js/jquery-1.12.4.min.js"></script>
+
+    <script>
+        $(function () {
+            //  最新资讯渲染到页面
+            $.ajax({
+                url: "http://localhost:8080/api/v1/index/latest",
+                dataType: "json",
+                success: function (res) {
+                    const result = template("news", res);
+                    $(".common_news").html(result);
+                }
+            });
+
+
+            //  最新评论部分
+            $.ajax({
+                url: "http://localhost:8080/api/v1/index/latest_comment",
+                dataType: "json",
+                success: function (res) {
+                    const result = template("newComments", res);
+                    $(".comment_list").html(result);
+                }
+            });
+        });
+    </script>
+
+
+    <!-- 最新资讯的模板 -->
+    <script id="news" type="text/html">
+    {{each data}}
+    <div class="common_news_list">
+        <a href="#" class="list_pic"><img src="{{$value.cover}}" alt="" /></a>
+        <h4>
+            <a href="./article.html?id={{$value.id}}">{{$value.title}}</a>
+        </h4>
+        <p>
+            {{$value.intro}}
+        </p>
+        <div class="new_info">
+            <span>标签：{{$value.category}}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<i class="fa fa-eye"></i>&nbsp;阅读(
+                {{$value.read}} )&nbsp;&nbsp;&nbsp;<i class="fa fa-commenting"></i>&nbsp;评论( {{$value.comments}}
+                )</span>
+            <b>发布于 {{$value.date}}</b>
+        </div>
+    </div>
+    {{/each}}
+    </script>
+
+
+    <!-- 最新评论的模板 -->
+    <script id="newComments" type="text/html">
+    {{each data}}
+    <li>
+        <!-- 取出作者的第一个字 -->
+        <span>{{$value.author.substr(0,1)}}</span>
+        <b><em>{{$value.author}}</em> {{$value.date}}说:</b>
+        <strong>{{$value.intro}}</strong>
+    </li>
+    {{/each}}
+    </script>
+
     <!-- template模板渲染数据 -->
     <script id='attention' type='text/html'>
     {{each data }}
@@ -244,13 +305,15 @@
                 url: "http://localhost:8080/api/v1/index/attention",
                 dataType: 'json',
                 success: function (response) {
-                    // console.log(response.data)
+                    console.log(response)
                     //template模板
                     $('#guanzhu_list').html(template('attention', response))
-
                 }
             })
         })
+
+
+
 
     </script>
 </body>
