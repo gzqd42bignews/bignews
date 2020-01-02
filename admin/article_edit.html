@@ -154,7 +154,57 @@
           $("#inputTitle").val(response.data.title);
           $("[name='categoryId']").val(response.data.categoryId);
           $("[class='article_cover']").attr("src", response.data.cover);
+          //获取富文本内容并渲染
+          $("#testico").val(response.data.date); //获取时间.
+          setTimeout(function() {
+            tinymce.activeEditor.setContent(response.data.content);
+          }, 200);
         }
+      });
+      //修改图片预览
+      $("#inputCover").change(function() {
+        var file = this.files[0];
+        if (file) {
+          var url = URL.createObjectURL(file);
+          $(".article_cover").attr("src", url);
+        }
+      });
+      //封装函数
+      function fn(state) {
+        //取出form表单数据
+        var fd = new FormData($("#form")[0]);
+        //追加修改后的文本框内容
+        fd.append("content", tinyMCE.activeEditor.getContent());
+        fd.append("id", id);
+        fd.append("state", state);
+        $.ajax({
+          type: "post",
+          dataType: "json",
+          url: BigNew.article_edit,
+          data: fd,
+          contentType: false,
+          processData: false,
+          success: function(res) {
+            if (res.code === 200) {
+              alert("修改成功");
+              //后退
+              window.history.back();
+            } else {
+              alert(res.msg);
+            }
+          }
+        });
+      }
+
+      //点击修改按钮
+      $(".btn-success").click(function(e) {
+        e.preventDefault();
+        fn("已发布");
+      });
+      //点击另存为草稿
+      $(".btn-default").click(function(e) {
+        e.preventDefault();
+        fn("草稿");
       });
     });
   </script>
