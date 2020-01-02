@@ -186,7 +186,7 @@
   <script>
     $(function () {
       //先调用，页面一加载就搜索评论
-      getComList(1);
+      getCommentList(1);
 
       function loadPagination(totalPages, startPage) {
         //(1)先销毁上一次的分页数据
@@ -210,7 +210,7 @@
       //先调用一下
       loadPagination(10, 1);
 
-      function getComList(currentPage) {
+      function getCommentList(currentPage) {
         $.ajax({
           type: 'get',
           url: BigNew.comment_list,
