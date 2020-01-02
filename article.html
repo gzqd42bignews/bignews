@@ -256,6 +256,7 @@
           // const temp = template("comment_List", response.data);
           const result = template("comment_List", response.data);
           $(".comment_list_con").html(result);
+          $(".comment_count").html(response.data.length + "条评论");
         }
       });
     });
