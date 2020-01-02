@@ -175,9 +175,9 @@
       <td>{{$value.time}}</td>
       <td>{{$value.state}}</td>
       <td class="text-center">
-        <a href="javascript:void(0);;" data-id="{{$value.id}}" class="btn btn-warning btn-xs">拒绝</a>
-        <a href="javascript:void(0);;" data-id="{{$value.id}}" class="btn btn-pass btn-xs">批准</a>
-        <a href="javascript:void(0);;" data-id="{{$value.id}}" class="btn btn-danger btn-xs">删除</a>
+        <a href="javascript:void(0);" data-id="{{$value.id}}" class="btn btn-warning btn-xs btn-reject">拒绝</a>
+        <a href="javascript:void(0);" data-id="{{$value.id}}" class="btn btn-info btn-xs btn-pass">批准</a>
+        <a href="javascript:void(0);" data-id="{{$value.id}}" class="btn btn-danger btn-xs btn-delete">删除</a>
 
       </td>
     </tr>
@@ -207,8 +207,7 @@
           }
         })
       }
-      //先调用一下
-      loadPagination(10, 1);
+
 
       function getCommentList(currentPage) {
         $.ajax({
@@ -224,9 +223,32 @@
             //模板引擎渲染页面
             $('.table>tbody').html(template('commentList', response));
             // 加载分页组件
+            loadPagination(response.data.totalPages, currentPage)
           }
         })
       }
+      //评论审核通过
+      //注意点：动态添加的元素需要注册委托事件
+      $('body').on('click', '.btn-pass', function () {
+        //获取评论id
+        var id = $(this).attr('data-id');
+        //ajax请求
+        $.ajax({
+          type: 'post',
+          url: BigNew.comment_pass,
+          dataType: 'json',
+          data: {
+            id: id
+          },
+          success: function (response) {
+            console.log(response);
+            if (response.code === 200) {
+              alert('审核通过')
+              window.location.reload();
+            }
+          }
+        })
+      })
     })
   </script>
 </body>
