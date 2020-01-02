@@ -154,6 +154,10 @@
           $("#inputTitle").val(response.data.title);
           $("[name='categoryId']").val(response.data.categoryId);
           $("[class='article_cover']").attr("src", response.data.cover);
+          //获取富文本内容并渲染
+          setTimeout(function() {
+            tinymce.activeEditor.setContent(response.data.content);
+          }, 200);
         }
       });
     });
