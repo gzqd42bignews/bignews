@@ -298,23 +298,16 @@
 
     </script>
     <script>
-
-        $(function () {
-            //请求服务器数据
-            $.ajax({
-                url: "http://localhost:8080/api/v1/index/attention",
-                dataType: 'json',
-                success: function (response) {
-                    console.log(response)
-                    //template模板
-                    $('#guanzhu_list').html(template('attention', response))
-                }
-            })
+        //请求服务器数据
+        $.ajax({
+            url: "http://localhost:8080/api/v1/index/attention",
+            dataType: 'json',
+            success: function (response) {
+                console.log(response)
+                //template模板
+                $('#guanzhu_list').html(template('attention', response))
+            }
         })
-
-
-
-
     </script>
 </body>
 
