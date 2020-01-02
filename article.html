@@ -172,7 +172,7 @@
         </div>
         <div class="common_wrap">
           <h3><i class="fa fa-bullseye"></i> 焦点关注</h3>
-          <ul class="content_list guanzhu_list">
+          <ul class="content_list guanzhu_list" id="guanzhu_list">
             <li><a href="#">神奇的水滴摄影，泡泡中的世界泡泡中的世界</a></li>
             <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
             <li><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
@@ -214,6 +214,20 @@
     </div>
      {{/each}}
   </script>
+  <!-- 关注焦点模板 -->
+  <script id="attention" type="text/html">
+    {{each data }}
+    <li>
+        <a href="#">{{$value.intro}}</a>
+    </li>
+    {{/each}}
+  </script>
+
+  <!-- 文章详情内容 -->
+  <script id="author_list" type="text/html">
+    {{data.author}} 发布于 {{data.date}}&nbsp;&nbsp;&nbsp;分类: {{data.category}}&nbsp;&nbsp;&nbsp;阅读:
+    ({{data.read}})&nbsp;&nbsp;&nbsp;评论: ({{data.comments}})
+  </script>
 
   <script>
     $(function() {
@@ -242,7 +256,16 @@
           }
         });
       });
-
+      //请求服务器数据
+      $.ajax({
+        url: "http://localhost:8080/api/v1/index/attention",
+        dataType: "json",
+        success: function(response) {
+          // console.log(response.data)
+          //template模板
+          $("#guanzhu_list").html(template("attention", response));
+        }
+      });
       //   显示评论列表;
       $.ajax({
         url: "http://localhost:8080/api/v1/index/get_comment",
@@ -252,12 +275,54 @@
         dataType: "json",
         success: function(response) {
           console.log(response);
-
-          // const temp = template("comment_List", response.data);
           const result = template("comment_List", response.data);
           $(".comment_list_con").html(result);
         }
       });
     });
+  </script>
+
+  <script>
+    //获取点击过来的文章的id
+    var id = window.location.search.split("=")[1];
+    $.ajax({
+      type: "get",
+      url: "http://localhost:8080/api/v1/index/article",
+      data: {
+        id: id
+      },
+      success: function(response) {
+        console.log(response);
+        if (response.code === 200) {
+          //标题
+          $(".article_title").text(response.data.title);
+          //日期
+          $(".article_info").html(template("author_list", response));
+          //内容
+          $(".article_con").html(response.data.content);
+        }
+      }
+    });
+    //  上下文选择按钮
+    const pre = $(".article_links").children()[0];
+    const next = $(".article_links").children()[2];
+    console.log(pre, next);
+    var id = +window.location.search.split("=")[1];
+    console.log(id);
+    //注册点击事件
+    pre.onclick = function() {
+      id = id - 1;
+      if (id < 0) {
+        alert("这是最前一篇了！！！");
+        return;
+      }
+
+      pre.href = "./article.html?id=" + id;
+    };
+    next.onclick = function() {
+      id = id + 1;
+
+      next.href = "./article.html?id=" + id;
+    };
   </script>
 </html>
