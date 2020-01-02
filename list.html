@@ -59,7 +59,7 @@
     </div>
 
     <div class="main_con clearfix">
-      <div class="left_con setfr">
+      <div class="left_con setfr" id="newSearch">
         <div class="list_title">
           <h3>科 技</h3>
         </div>
@@ -290,6 +290,9 @@
     <!-- 导包template -->
     <script src="./js/template-web.js"></script>
     <script id="news" type="text/html">
+      <div class="list_title">
+        <h3>科 技</h3>
+      </div>
       {{each}}
           <div class="common_news_list">
               <a href="#" class="list_pic"><img src="{{$value.cover}}" alt=""/></a>
@@ -325,12 +328,16 @@
             success: function(response) {
               const data = response.data;
               console.log(data);
-              const htmlStr = template("news", data);
+              const htmlStr = template("news", data.data);
               //   console.log(htmlStr);
               $("#newSearch").html(htmlStr);
             }
           });
         });
+        // $(".search_btn").trigger("click");
+
+        const id = location.search;
+        console.log(id);
       });
     </script>
   </body>
