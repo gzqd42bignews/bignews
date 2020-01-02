@@ -13,30 +13,54 @@
     <script src="./libs/jquery-1.12.4.min.js"></script>
     <!-- 模板引擎 -->
     <script src="./libs/template-web.js"></script>
+    <!-- jsDate日期插件 -->
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="./libs/jedate/css/jeDate-test.css"
+    />
+    <link rel="stylesheet" href="./libs/jedate/css/jedate.css" />
+    <script src="./libs/jedate/js/jedate.js"></script>
+    <!-- tinymce富文本编辑器插件 -->
+    <script src="./libs/tinymce/tinymce.min.js"></script>
+    <!-- jsDate + tinumce配置文件 -->
+    <script src="./libs/config.js"></script>
   </head>
 
   <body>
     <div class="container-fluid">
       <div class="common_title">
-        文章编辑
+        文章发布
       </div>
       <div class="container-fluid common_con">
         <form class="form-horizontal article_form" id="form">
           <div class="form-group">
-            <label for="inputTitle" class="col-sm-2 control-label">文章标题：</label>
+            <label for="inputTitle" class="col-sm-2 control-label"
+              >文章标题：</label
+            >
             <div class="col-sm-10">
-              <input type="text" name="title" class="form-control title" id="inputTitle" value="文章标题文字" />
+              <input
+                type="text"
+                name="title"
+                class="form-control title"
+                id="inputTitle"
+                value="文章标题文字"
+              />
             </div>
           </div>
           <div class="form-group">
-            <label for="inputCover" class="col-sm-2 control-label">文章封面：</label>
+            <label for="inputCover" class="col-sm-2 control-label"
+              >文章封面：</label
+            >
             <div class="col-sm-10">
               <img src="images/pic06.jpg" class="article_cover" id="userPic" />
               <input name="cover" type="file" id="inputCover" />
             </div>
           </div>
           <div class="form-group">
-            <label for="inputCategory" class="col-sm-2 control-label">文章类别：</label>
+            <label for="inputCategory" class="col-sm-2 control-label"
+              >文章类别：</label
+            >
             <div class="col-sm-4">
               <select class="form-control category" name="categoryId">
                 <option>类别一</option>
@@ -49,16 +73,46 @@
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label">发布时间：</label>
-            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+              <div class="jeitem">
+                <div class="jeinpbox">
+                  <input
+                    type="text"
+                    name="date"
+                    class="jeinput"
+                    id="testico"
+                    placeholder="YYYY-MM-DD"
+                  />
+                  <div
+                    class="icons jebtns"
+                    onclick="jeDate('#testico',{trigger:false,format: 'YYYY-MM-DD',theme: { bgcolor: '#00A680', pnColor: '#00DDAA' }})"
+                  ></div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="form-group">
-            <label for="inputEmail3" class="col-sm-2 control-label">文章内容：</label>
-            <div class="col-sm-10"></div>
+            <label for="inputEmail3" class="col-sm-2 control-label"
+              >文章内容：</label
+            >
+            <div class="col-sm-10">
+              <input
+                type="text"
+                class="form-control"
+                id="mytextarea"
+                placeholder="文章内容"
+                value="文章内容"
+              />
+            </div>
           </div>
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-              <button type="submit" class="btn btn-success btn-release">发布</button>
-              <button type="submit" class="btn btn-default btn-draft">存为草稿</button>
+              <button type="submit" class="btn btn-success btn-release">
+                发布
+              </button>
+              <button type="submit" class="btn btn-default btn-draft">
+                存为草稿
+              </button>
             </div>
           </div>
         </form>
@@ -67,20 +121,78 @@
   </body>
 
   <script src="./js/http.js"></script>
+  <script type="text/html" id="cate">
+    {{each}}
+    <option value='{{$value.id}}' >{{$value.name}}</option>
+    {{/each}}
+  </script>
   <script>
-    // 获取用户输入的图片并且渲染到页面
-    $("#inputCover").on("change", function() {
-      const file = this.files[0];
-      // console.log(file);
+    $(function() {
+      //获取文章所有类别
+      $.ajax({
+        type: "get",
+        url: BigNew.category_list,
+        dataType: "json",
+        success: function(res) {
+          console.log(res);
+          if (res.code === 200) {
+            $(".category").html(template("cate", res.data));
+          }
+        }
+      });
 
-      //   将file转化为url形式
-      const url = URL.createObjectURL(file);
-      //   console.log(url);
+      //预览图片文件
 
-      //  将图片渲染到页面上
-      $("#userPic").attr("src", url);
+      $("#inputCover").change(function() {
+        //获取到图片的路径
+        var file = this.files[0];
+        //将图片路径转化成网页地址
+        if (file) {
+          const url = URL.createObjectURL(file);
+          $(".article_cover").attr("src", url);
+        }
+      });
+      //发布和存草稿步骤相同，只是其中的状态不同，所以封装为一函数调用，传入按钮代表的状态为参数即可
+      function fn(state) {
+        var fd = new FormData($("form")[0]);
+        console.log(fd);
+        console.log($("form"));
+
+        //追加文章内容
+        fd.append("content", tinyMCE.activeEditor.getContent());
+        //追加文章状态
+        fd.append("state", state);
+        $.ajax({
+          type: "post",
+          url: BigNew.article_publish,
+          dataType: "json",
+          data: fd,
+          contentType: false,
+          processData: false,
+          success: function(res) {
+            if (res.code === 200) {
+              alert("添加成功");
+              $(".level02>li:eq(0)", window.parent.document)
+                .addClass("active")
+                .siblings()
+                .removeClass("active");
+              window.history.back();
+            } else {
+              alert(res.msg);
+            }
+          }
+        });
+      }
+
+      //点击发布按钮
+      $(".btn-success").click(function(e) {
+        e.preventDefault();
+        fn("已发布");
+      });
+      $(".btn-default").click(function(e) {
+        e.preventDefault();
+        fn("草稿");
+      });
     });
-
-    // 将用户填写的form表单提交给后台
   </script>
 </html>
