@@ -262,9 +262,28 @@
                     }
                 }
             })
-        })
+            //  上下文选择按钮 
+            const pre = $('.article_links').children()[0];
+            const next = $('.article_links').children()[2];
+            console.log(pre, next);
+            var id = +window.location.search.split('=')[1];
+            console.log(id);
 
+            pre.onclick = function () {
+                id = id - 1;
+                pre.href = "./article.html?id=" + id
+            }
+            next.onclick = function () {
+
+                id = id + 1
+                next.href = "./article.html?id=" + id
+            }
+            //注册点击事件
+        })
     </script>
+
+
+
 </body>
 
 </html>
