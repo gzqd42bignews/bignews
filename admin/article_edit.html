@@ -155,6 +155,7 @@
           $("[name='categoryId']").val(response.data.categoryId);
           $("[class='article_cover']").attr("src", response.data.cover);
           //获取富文本内容并渲染
+          $("#testico").val(response.data.date); //获取时间.
           setTimeout(function() {
             tinymce.activeEditor.setContent(response.data.content);
           }, 200);
