@@ -58,7 +58,7 @@
     <div class="container-fluid">
       <div class="column_pannel" id="column_show"></div>
     </div>
-
+    <!-- 月新增文章数 -->
     <!-- 折线图 -->
     <script>
       $.ajax({
@@ -73,15 +73,16 @@
         }
       });
       function lineGraph(response) {
-        var json = response;
+        // 接收的数据
         var obj = response;
         loadEchars(obj);
 
         function loadEchars(obj) {
           // 基于准备好的dom，初始化echarts实例
           var myChart = echarts.init(document.getElementById("curve_show"));
-
+          //Y轴数据
           var data = [];
+          //X轴数据
           var date = [];
           for (var i = 0; i < obj.date.length; i++) {
             data.push(obj.date[i].count);
@@ -212,6 +213,7 @@
       // 使用刚指定的配置项和数据显示图表。
       myChart1.setOption(option1);
     </script>
+    <!-- 分类访问量图 -->
     <!-- 柱状图 -->
     <script>
       $.ajax({
@@ -220,7 +222,9 @@
         success: function(response) {
           console.log(response);
           const code = response.code;
+          // 通过ajax获取的name数据
           let arrName = [];
+          // 通过ajax获取的articles数据
           let arrArticles = [];
           response.date.forEach(function(item) {
             arrName.push(item.name);
@@ -231,7 +235,6 @@
           //   console.log(arrName);
           console.log(arrName);
           console.log(arrArticles);
-
           if (code === 200) {
             barGraph(arrName, arrArticles);
           }
@@ -245,15 +248,10 @@
             left: "center",
             text: "分类访问量"
           },
-          tooltip: {
-            trigger: "axis",
-            axisPointer: {
-              // 坐标轴指示器，坐标轴触发有效
-              type: "line" // 默认为直线，可选为：'line' | 'shadow'
-            }
-          },
+          tooltip: {},
           legend: {
-            data: arrName,
+            //   标题下的注释
+            data: ["访问量"],
             top: 30
           },
           grid: {
@@ -264,42 +262,50 @@
           },
           xAxis: [
             {
-              type: "category",
-              data: ["一月", "二月", "三月", "四月"]
+              //   type: "category",
+              data: [arrName[0], arrName[1], arrName[2], arrName[3], arrName[4]]
             }
           ],
-          yAxis: [
-            {
-              type: "value"
-            }
-          ],
-          color: ["#5885e8", "#13cfd5", "#00ce68", "#ff9565", "#20ff19"],
+          yAxis: {},
+          // {
+          //   type: "value"
+          // }
+          //   color: ["#5885e8", "#13cfd5", "#00ce68", "#ff9565", "#20ff19"],
+          color: ["#ff9565"],
           series: [
             {
-              name: "爱生活",
+              // 此处一定要和legend里面的data属性一致才能生效
+              name: "访问量",
               type: "bar",
-              data: [320, 332, 301, 334]
-            },
-            {
-              name: "趣美味",
-              type: "bar",
-              data: [220, 132, 101, 134]
-            },
-            {
-              name: "爱旅行",
-              type: "bar",
-              data: [220, 182, 191, 234]
-            },
-            {
-              name: "爱电影",
-              type: "bar",
-              data: [150, 232, 201, 154]
-            },
-            {
-              name: "爱游泳",
-              type: "bar",
-              data: [262, 118, 364, 426]
+              data: [
+                arrArticles[0],
+                arrArticles[1],
+                arrArticles[2],
+                arrArticles[3],
+                arrArticles[4]
+              ]
             }
+            /* ,
+            {
+              name: arrName[1],
+              type: "bar",
+              data: [0, 0, arrArticles[1]]
+            },
+            {
+              name: arrName[2],
+              type: "bar",
+              data: [0, 0, arrArticles[2]]
+            },
+            {
+              name: arrName[3],
+              type: "bar",
+              data: [0, 0, arrArticles[3]]
+            },
+            {
+              name: arrName[4],
+              type: "bar",
+              data: [0, 0, arrArticles[4]]
+            } */
           ]
         };
 
