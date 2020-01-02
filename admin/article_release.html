@@ -97,11 +97,11 @@
   </body>
 
   <script src="./js/http.js"></script>
-<script type="text/html" id="cate">
-  {{each}}
-  <option value='{{$value.id}}' >{{$value.name}}</option>
-  {{/each}}
-</script>
+  <script type="text/html" id="cate">
+    {{each}}
+    <option value='{{$value.id}}' >{{$value.name}}</option>
+    {{/each}}
+  </script>
   <script>
     $(function() {
       //获取文章所有类别
@@ -111,23 +111,23 @@
         dataType: "json",
         success: function(res) {
           console.log(res);
-          if(res.code===200){
-            $('.category').html(template('cate',res.data))
+          if (res.code === 200) {
+            $(".category").html(template("cate", res.data));
           }
         }
       });
 
       //预览图片文件
-      $('#inputCover').change(function(){
+
+      $("#inputCover").change(function() {
         //获取到图片的路径
-        var file=this.file[0];
+        var file = this.files[0];
         //将图片路径转化成网页地址
-        if(file){
-          const url= URL.createObjectURL(file);
+        if (file) {
+          const url = URL.createObjectURL(file);
+          $(".article_cover").attr("src", url);
         }
-        $('.article_cover').attr('src',url)
-      })
-      
+      });
     });
   </script>
 </html>
