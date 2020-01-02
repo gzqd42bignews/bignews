@@ -24,7 +24,7 @@
     <!-- tinymce富文本编辑器插件 -->
     <script src="./libs/tinymce/tinymce.min.js"></script>
     <!-- jsDate + tinumce配置文件 -->
-    <!-- <script src="./libs/config.js"></script> -->
+    <script src="./libs/config.js"></script>
   </head>
 
   <body>
@@ -73,13 +73,37 @@
           </div>
           <div class="form-group">
             <label class="col-sm-2 control-label">发布时间：</label>
-            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+              <div class="jeitem">
+                <div class="jeinpbox">
+                  <input
+                    type="text"
+                    name="date"
+                    class="jeinput"
+                    id="testico"
+                    placeholder="YYYY-MM-DD"
+                  />
+                  <div
+                    class="icons jebtns"
+                    onclick="jeDate('#testico',{trigger:false,format: 'YYYY-MM-DD',theme: { bgcolor: '#00A680', pnColor: '#00DDAA' }})"
+                  ></div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="form-group">
             <label for="inputEmail3" class="col-sm-2 control-label"
               >文章内容：</label
             >
-            <div class="col-sm-10"></div>
+            <div class="col-sm-10">
+              <input
+                type="text"
+                class="form-control"
+                id="mytextarea"
+                placeholder="文章内容"
+                value="文章内容"
+              />
+            </div>
           </div>
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
@@ -132,6 +156,8 @@
       function fn(state) {
         var fd = new FormData($("form")[0]);
         console.log(fd);
+        console.log($("form"));
+
         //追加文章内容
         fd.append("content", tinyMCE.activeEditor.getContent());
         //追加文章状态
