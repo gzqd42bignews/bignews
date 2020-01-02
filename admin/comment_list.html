@@ -188,6 +188,8 @@
       //先调用，页面一加载就搜索评论
       getCommentList(1);
 
+      let a = 0;
+
       function loadPagination(totalPages, startPage) {
         //(1)先销毁上一次的分页数据
         //(2)加载分页插件
@@ -201,8 +203,8 @@
           last: '尾页',
           onPageClick: function (event, page) {
             //如果点击的页数与当前页数不一致，则发送ajax请求
-            if (page != startPage) {
-              // getComList(page);
+            if (page != a) {
+              getCommentList(page);
             }
           }
         })
@@ -223,7 +225,7 @@
             //模板引擎渲染页面
             $('.table>tbody').html(template('commentList', response));
             // 加载分页组件
-            loadPagination(response.data.totalPages, currentPage)
+            loadPagination(response.data.totalPage, currentPage)
           }
         })
       }
@@ -243,8 +245,30 @@
           success: function (response) {
             console.log(response);
             if (response.code === 200) {
-              alert('审核通过')
-              window.location.reload();
+              alert(response.msg)
+              window.location.reload(); //刷新当前页面
+            }
+          }
+        })
+      })
+      //评论审核拒绝
+      //动态添加的元素需要注册委托事件
+      $('body').on('click', '.btn-reject', function () {
+        //获取评论id
+        var id = $(this).attr('data-id');
+        //ajax请求
+        $.ajax({
+          type: 'post',
+          url: BigNew.comment_reject,
+          dataType: 'json',
+          data: {
+            id: id
+          },
+          success: function (response) {
+            console.log(response);
+            if (response.code === 200) {
+              alert(response.msg);
+              window.location.reload(); //刷新当前页面
             }
           }
         })
