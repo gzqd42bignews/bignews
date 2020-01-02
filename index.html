@@ -406,6 +406,8 @@
       {{/each}}
     </script>
 
+    <!-- 焦点新闻模块 -->
+
     <script id="focus_news" type="text/html">
             {{each data}}
              {{if $index == 0}}
@@ -417,6 +419,9 @@
                 <p>{{$value.title}}</p>
             {{/each}}
         </script>
+
+
+        <!-- 热门排行模块 -->
     <script id="rank" type="text/html">
             {{each data v}}
             <li><span class="first">1</span><a href="./article.html?id={{v.id }}">{{ v.title}}</a></li>
